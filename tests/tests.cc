@@ -98,6 +98,10 @@ TEST_CASE("deposit errors", "[ex-6]") {
   REQUIRE_THROWS_AS(atm.DepositCash(12345678, 1234, -20),
                     std::invalid_argument);
   REQUIRE_THROWS_AS(atm.DepositCash(12348, 1234, 20), std::invalid_argument);
+
+  atm.DepositCash(12345678, 1234, 20);
+
+  REQUIRE(atm.CheckBalance(12345678, 1234) == 320.30);
 }
 
 TEST_CASE("print ledger errors", "[ex-7]") {
