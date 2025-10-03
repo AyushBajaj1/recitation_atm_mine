@@ -74,3 +74,34 @@ TEST_CASE("Example: Print Prompt Ledger", "[ex-3]") {
   atm.PrintLedger("./prompt.txt", 12345678, 1234);
   REQUIRE(CompareFiles("./ex-1.txt", "./prompt.txt"));
 }
+
+TEST_CASE("already contains entry", "[ex-4]") {
+  Atm atm;
+  atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
+  REQUIRE_THROWS_AS(atm.RegisterAccount(12345678, 1234, " ", 300.1),
+                    std::invalid_argument);
+}
+
+TEST_CASE("withdraw errors", "[ex-5]") {
+  Atm atm;
+  atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
+  REQUIRE_THROWS_AS(atm.WithdrawCash(12345678, 1234, -20),
+                    std::invalid_argument);
+  REQUIRE_THROWS_AS(atm.WithdrawCash(12348, 1234, 20), std::invalid_argument);
+
+  REQUIRE_THROWS_AS(atm.WithdrawCash(12345678, 1234, 400), std::runtime_error);
+}
+
+TEST_CASE("deposit errors", "[ex-6]") {
+  Atm atm;
+  atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
+  REQUIRE_THROWS_AS(atm.DepositCash(12345678, 1234, -20),
+                    std::invalid_argument);
+  REQUIRE_THROWS_AS(atm.DepositCash(12348, 1234, 20), std::invalid_argument);
+}
+
+TEST_CASE("print ledger errors", "[ex-7]") {
+  Atm atm;
+  atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
+  REQUIRE_THROWS_AS(atm.PrintLedger("ggg", 12348, 1234), std::invalid_argument);
+}
